@@ -16,13 +16,15 @@ use Illuminate\Http\Request;
 Route::post('login', 'AuthController@login');
 Route::post('register', 'AuthController@register');
 Route::get('testopen', 'TestController@open');
+Route::post('stafflogin', 'StaffController@login');
+Route::post('staffregister', 'StaffController@store');
 
 
 Route::apiResources([
 	'users' => 'UserController',
     'cars' => 'CarController',
     'books' => 'BookedController',
-    'returncars' => 'ReturnCarController'
+    'returncars' => 'ReturnCarController',
 ]);
 
 Route::group(['middleware' => ['jwt.auth']], function() {
