@@ -100,8 +100,10 @@ class BookedController extends Controller
 
             $var = Booked::leftjoin('cars','cars.id','=', 'bookeds.car_id')
             ->leftjoin('users', 'bookeds.user_id', '=', 'users.id')
-            ->select('cars.id', 'cars.car_name', 'cars.plate_number', 'cars.image', 'cars.price', 'bookeds.duration', 'users.name');
+            ->select('cars.id', 'cars.car_name', 'cars.plate_number', 'cars.image', 'cars.price', 'bookeds.duration', 'users.name')
             ->where('users.id', $id)->get();
+
+
             
 
             return $var;

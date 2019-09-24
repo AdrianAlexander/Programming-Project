@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\ReturnCar;
 use App\Car;
+use App\Booked;
 
 class ReturnCarController extends Controller
 {
@@ -37,12 +38,14 @@ class ReturnCarController extends Controller
             }
 
             $var = Car::findOrFail($request->car_id);
+            $varBook = Booked::findOrFail($request->book_id); 
 
-            if($var->taken == true && $request->user_id != NULL && $request->car_id != NULL && $request->date_return != NULL){
+            if($var->taken == true && $request->user_id != NULL && $request->car_id != NULL && $request->book_id != NULL && $request->date_return != NULL){
 
                 $newData = [
                 'user_id' => $request->user_id,
                 'car_id' => $request->car_id,
+                'book_id' => $request->book_id,
                 'date_return' => $request->date_return,
                 ];
 
@@ -50,6 +53,9 @@ class ReturnCarController extends Controller
 
                 $var->taken = false;
                 $var->save();
+
+                $varBook->returned = true;
+                $varBook->save();
 
 
 

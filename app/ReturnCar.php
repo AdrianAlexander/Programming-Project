@@ -8,7 +8,7 @@ class ReturnCar extends Model
 {
    protected $fillable = [
 
-    	'user_id', 'car_id', 'date_return'
+    	'user_id', 'car_id', 'book_id', 'date_return'
 
 	];
 
@@ -19,5 +19,9 @@ class ReturnCar extends Model
 
     public function cars(){
     	return $this->belongsTo('App\Car', 'car_id');
+    }
+
+    public function bookeds(){
+    	return $this->belongsTo('App\Booked', 'book_id');
     }
 }

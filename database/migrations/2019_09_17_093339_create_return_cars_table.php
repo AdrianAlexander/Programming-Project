@@ -23,6 +23,10 @@ class CreateReturnCarsTable extends Migration
             $table->foreign('car_id')
             ->references('id')->on('cars')
             ->onDelete('cascade');
+            $table->unsignedInteger('book_id');
+            $table->foreign('book_id')
+            ->references('id')->on('bookeds')
+            ->onDelete('cascade');
             $table->date('date_return')->format('d-m-Y');
             $table->timestamps();
         });
