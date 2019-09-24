@@ -92,17 +92,17 @@ class BookedController extends Controller
         try{
             
             //$var = Booked::select('cars.car_name', 'cars.id')->leftjoin('cars','cars.id','=','books.car_id')->where('id', $id);
-            $var = Booked::where('bookeds.id', $id)
+            /*$var = Booked::where('bookeds.id', $id)
             ->leftjoin('cars', 'bookeds.car_id', '=', 'cars.id')
             ->leftjoin('users', 'bookeds.user_id', '=', 'users.id')
-            ->select('bookeds.id', 'users.name', 'cars.car_name', 'cars.car_type', 'bookeds.book_date')->first();
+            ->select('bookeds.id', 'users.name', 'cars.car_name', 'cars.car_type', 'bookeds.book_date')->first();*/
             //$var = Booked::leftjoin('cars','cars.id','=', 'books.car_id')->select('cars.*')->where('books.id', $id)->first();
 
             $var = Booked::leftjoin('cars','cars.id','=', 'bookeds.car_id')
             ->leftjoin('users', 'bookeds.user_id', '=', 'users.id')
             ->select('cars.id', 'cars.car_name', 'cars.plate_number', 'cars.image', 'cars.price', 'bookeds.duration', 'users.name');
             ->where('users.id', $id)->get();
-            return $var;
+            
 
             return $var;
            

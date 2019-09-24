@@ -13,4 +13,8 @@ class TestController extends Controller
     public function closed(){
     	return "you cannot see this unless you're authorized";
     }
+
+    public function staff(){
+    	return "you cannot see this unless you're an admin";
+    }
 }

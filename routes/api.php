@@ -16,8 +16,8 @@ use Illuminate\Http\Request;
 Route::post('login', 'AuthController@login');
 Route::post('register', 'AuthController@register');
 Route::get('testopen', 'TestController@open');
-Route::post('stafflogin', 'StaffController@login');
-Route::post('staffregister', 'StaffController@store');
+Route::post('staffregister', 'StaffAuthController@register');
+Route::post('stafflogin', 'StaffAuthController@login');
 
 
 Route::apiResources([
@@ -31,4 +31,9 @@ Route::group(['middleware' => ['jwt.auth']], function() {
     Route::get('logout', 'AuthController@logout');
     Route::get('testclosed', 'TestController@closed');
 	Route::get('refreshtoken', 'AuthController@refreshtoken');	
+});
+
+Route::group([ 'prefix' => 'staff', 'middleware' =>['jwt.auth']], function(){
+	Route::get('teststaff', 'TestController@staff');
+	Route::get('stafflogout', 'StaffAuthController@logout');
 });
