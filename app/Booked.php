@@ -8,12 +8,13 @@ class Booked extends Model
 {
     protected $fillable = [
 
-    	'user_id', 'car_id', 'book_date', 
+    	'user_id', 'car_id', 'book_date'
 
 	];
 
 	protected $casts = [
-    	'returned' => 'boolean'
+    	'returned' => 'boolean',
+        'paid' => 'boolean'
     ];
 
     public function users(){

@@ -55,9 +55,9 @@ class ReturnCarController extends Controller
                 $hours = $diff->h;
                 $hours = $hours + ($diff->days*24);
 
-                /*if($hours <1){
+                if($hours <1){
                     $hours = 1;
-                }*/
+                }
 
                 $totalPrice = $var->price * $hours;
                 $newData = [
@@ -76,6 +76,8 @@ class ReturnCarController extends Controller
                 //$varBook->duration = date_diff($endDate, $startDate)->format("%a");
                 //$varBook->duration = date_diff($endDate, $startDate);
                 $varBook->returned = true;
+                $varBook->paid = true;
+                $varBook->total_price = $totalPrice;
                
                 $var->save();
                 $varBook->save();
