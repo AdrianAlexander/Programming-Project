@@ -18,6 +18,7 @@ Route::post('register', 'AuthController@register');
 Route::get('testopen', 'TestController@open');
 Route::post('staffregister', 'StaffAuthController@register');
 Route::post('stafflogin', 'StaffAuthController@login');
+Route::get('paypal', 'BookedController@paypal');
 
 
 Route::apiResources([

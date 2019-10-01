@@ -76,7 +76,7 @@ class ReturnCarController extends Controller
                 //$varBook->duration = date_diff($endDate, $startDate)->format("%a");
                 //$varBook->duration = date_diff($endDate, $startDate);
                 $varBook->returned = true;
-                $varBook->paid = true;
+                //$varBook->paid = true;
                 $varBook->total_price = $totalPrice;
                
                 $var->save();

@@ -148,4 +148,9 @@ class BookedController extends Controller
             return $e->getMessage();
         }
     }
+
+    public function paypal($id){
+        $var = Booked::findOrFail($id);
+        $var->paid = true;
+    }
 }
