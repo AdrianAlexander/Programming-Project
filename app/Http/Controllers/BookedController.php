@@ -152,5 +152,6 @@ class BookedController extends Controller
     public function paypal($id){
         $var = Booked::findOrFail($id);
         $var->paid = true;
+        $var->save();
     }
 }
