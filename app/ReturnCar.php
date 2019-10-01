@@ -8,7 +8,7 @@ class ReturnCar extends Model
 {
    protected $fillable = [
 
-    	'user_id', 'car_id', 'book_id', 'date_return'
+    	'user_id', 'car_id', 'book_id', 'date_return', 'duration', 'price'
 
 	];
 

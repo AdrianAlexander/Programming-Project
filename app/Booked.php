@@ -8,7 +8,7 @@ class Booked extends Model
 {
     protected $fillable = [
 
-    	'user_id', 'car_id', 'book_date', 'duration'
+    	'user_id', 'car_id', 'book_date', 
 
 	];
 

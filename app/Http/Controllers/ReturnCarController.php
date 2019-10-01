@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\ReturnCar;
 use App\Car;
 use App\Booked;
+use App\User;
 
 class ReturnCarController extends Controller
 {
@@ -33,34 +34,47 @@ class ReturnCarController extends Controller
         $varBook = Booked::findOrFail($request->book_id); 
 
         try{
+            date_default_timezone_set('Australia/Melbourne');
+            $getDate = date("Y-m-d H:i:s");
 
-            $getDate = date("Y-m-d");
-
-            if($request->date_return < $getDate || $request->date_return <= $varBook->book_date){
+            /*if($request->date_return < $getDate){
                 return response([
                     "please fill the right date",
                 ]);
-            }
+            }*/
 
            
 
-            if($var->taken == true && $request->user_id != NULL && $request->car_id != NULL && $request->book_id != NULL && $request->date_return != NULL){
+            if($var->taken == true && $request->user_id != NULL && $request->car_id != NULL && $request->book_id != NULL){
 
+                $endDate = new \DateTime($request->date_return);
+                $startDate = new \DateTime($varBook->book_date);
+                //$testDate = new \DateTime("2019-10-05 10:15:20");
+                
+                $diff = $endDate->diff($endDate);
+                $hours = $diff->h;
+                $hours = $hours + ($diff->days*24);
+
+                /*if($hours <1){
+                    $hours = 1;
+                }*/
+
+                $totalPrice = $var->price * $hours;
                 $newData = [
                 'user_id' => $request->user_id,
                 'car_id' => $request->car_id,
                 'book_id' => $request->book_id,
-                'date_return' => $request->date_return,
+                'date_return' => $getDate,
+                'duration' => $hours,
+                'price' => $totalPrice,
                 ];
 
                 $fill = ReturnCar::create($newData);
 
                 $var->taken = false;
                
-
-                $endDate = new \DateTime($request->date_return);
-                $startDate = new \DateTime($varBook->book_date);
-                $varBook->duration = date_diff($endDate, $startDate)->format("%a");
+                //$varBook->duration = date_diff($endDate, $startDate)->format("%a");
+                //$varBook->duration = date_diff($endDate, $startDate);
                 $varBook->returned = true;
                
                 $var->save();
@@ -97,11 +111,13 @@ class ReturnCarController extends Controller
         
         try{
             
-            $var = ReturnCar::where('user_id',$id)->first();
+            $var = ReturnCar::where('user_id',$id)
+            ->leftjoin('users','return_cars.user_id', '=', 'users.id')
+            ->leftjoin('cars', 'return_cars.car_id', '=', 'cars.id')
+            ->select('users.name', 'cars.car_name', 'return_cars.price', 'return_cars.duration')->get();
            // $var = ReturnCar::where('')
-            return response([
-                $var
-            ]);
+            return $var;
+            
         }catch(\Exception $e){
             return response([
                 $e->getMessage()

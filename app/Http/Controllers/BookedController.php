@@ -30,14 +30,14 @@ class BookedController extends Controller
     {
         
        try{
+            date_default_timezone_set('Australia/Melbourne');
+            $getDate = date("Y-m-d H:i:s");
 
-            $getDate = date("Y-m-d");
-
-            if($request->book_date < $getDate){
+            /*if($request->book_date < $getDate){
                 return response([
                     "please fill the right date",
                 ]);
-            }
+            }*/
 
             $var = Car::findOrFail($request->car_id);
 
@@ -47,12 +47,12 @@ class BookedController extends Controller
                 ]);
             }
 
-            if($var->taken == false && $request->user_id != NULL && $request->car_id != NULL && $request->book_date != NULL){
+            if($var->taken == false && $request->user_id != NULL && $request->car_id != NULL){
 
                 $newData = [
                 'user_id' => $request->user_id,
                 'car_id' => $request->car_id,
-                'book_date' => $request->book_date,
+                'book_date' => $getDate,
                 ];
 
                 $fill = Booked::create($newData);
