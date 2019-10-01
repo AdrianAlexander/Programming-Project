@@ -9,6 +9,7 @@ use App\Booked;
 
 class ReturnCarController extends Controller
 {
+    
     /**
      * Display a listing of the resource.
      *
@@ -27,18 +28,21 @@ class ReturnCarController extends Controller
      */
     public function store(Request $request)
     {
+
+        $var = Car::findOrFail($request->car_id);
+        $varBook = Booked::findOrFail($request->book_id); 
+
         try{
 
             $getDate = date("Y-m-d");
 
-            if($request->date_return < $getDate){
+            if($request->date_return < $getDate || $request->date_return <= $varBook->book_date){
                 return response([
                     "please fill the right date",
                 ]);
             }
 
-            $var = Car::findOrFail($request->car_id);
-            $varBook = Booked::findOrFail($request->book_id); 
+           
 
             if($var->taken == true && $request->user_id != NULL && $request->car_id != NULL && $request->book_id != NULL && $request->date_return != NULL){
 
@@ -52,9 +56,14 @@ class ReturnCarController extends Controller
                 $fill = ReturnCar::create($newData);
 
                 $var->taken = false;
-                $var->save();
+               
 
+                $endDate = new \DateTime($request->date_return);
+                $startDate = new \DateTime($varBook->book_date);
+                $varBook->duration = date_diff($endDate, $startDate)->format("%a");
                 $varBook->returned = true;
+               
+                $var->save();
                 $varBook->save();
 
 
@@ -91,7 +100,7 @@ class ReturnCarController extends Controller
             $var = ReturnCar::where('user_id',$id)->first();
            // $var = ReturnCar::where('')
             return response([
-                'return' => $var
+                $var
             ]);
         }catch(\Exception $e){
             return response([

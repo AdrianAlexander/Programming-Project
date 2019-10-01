@@ -47,13 +47,12 @@ class BookedController extends Controller
                 ]);
             }
 
-            if($var->taken == false && $request->user_id != NULL && $request->car_id != NULL && $request->book_date != NULL && $request->duration != NULL){
+            if($var->taken == false && $request->user_id != NULL && $request->car_id != NULL && $request->book_date != NULL){
 
                 $newData = [
                 'user_id' => $request->user_id,
                 'car_id' => $request->car_id,
                 'book_date' => $request->book_date,
-                'duration' => $request->duration,
                 ];
 
                 $fill = Booked::create($newData);

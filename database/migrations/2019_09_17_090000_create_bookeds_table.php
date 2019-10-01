@@ -24,7 +24,7 @@ class CreateBookedsTable extends Migration
             ->references('id')->on('cars')
             ->onDelete('cascade');
             $table->date('book_date')->format('d-m-Y');
-            $table->unsignedInteger('duration');
+            $table->unsignedInteger('duration')->nullable();
             $table->boolean('returned')->default(false);
             $table->timestamps();
         });
