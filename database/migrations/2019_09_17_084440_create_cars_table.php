@@ -23,7 +23,7 @@ class CreateCarsTable extends Migration
             $table->unsignedInteger('price');
             $table->double('longitude');
             $table->double('latitude');
-            $table->string('image');
+            $table->string('image')->nullable();
             $table->boolean('taken')->default(false);
             $table->timestamps();
         });
