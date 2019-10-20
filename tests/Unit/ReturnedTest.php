@@ -10,7 +10,7 @@ use App\ReturnCar;
 class ReturnedTest extends TestCase
 {
     /** @test */
-    public function getAllReturn(){
+   public function getAllReturn(){
     	$response = $this->json('GET', '/api/returncars');
     	$response->assertStatus(200);
     	$response->assertJsonStructure(
@@ -20,6 +20,8 @@ class ReturnedTest extends TestCase
                             'user_id',
                             'car_id',
                             'book_id',
+                            'duration',
+                            'price',
                             'date_return',
 							'created_at',
                             'updated_at'
@@ -29,24 +31,44 @@ class ReturnedTest extends TestCase
     }
 
     /** @test */
-    public function showReturn(){
-    	$response = $this->json('GET', '/api/users');
-    	$product = $response->getData()[7];
+    public function returnCar(){
+        //you can use this to create data manually
+        $data = [
+            'user_id' => 18,
+            'car_id' => 5,
+            'book_id' => 11,
+        ];
 
-    	$showCar = $this->json('GET', '/api/returncars/'.$product->id);
-    	$showCar->assertJsonStructure(
+        //use this to create new data using faker
+        //$user = factory(\App\User::class)->create(); 
+        $response = $this->json('POST', '/api/returncars',$data);
+       
+        $response->assertJson(["Successful!"]);
+    }
+
+
+    /** @test */
+    public function showReturn(){
+        $response = $this->json('GET', '/api/users');
+        $product = $response->getData()[16];
+
+        $showCar = $this->json('GET', '/api/returncars/'.$product->id);
+        $showCar->assertJsonStructure(
                 [
                     [
-                            'id',
-                            'user_id',
-                            'car_id',
-                            'book_id',
-                            'date_return',
-                            'created_at',
-                            'updated_at'
+                            'name',
+                            'car_name',
+                            'price',
+                            'duration',
                             
                     ]               
                 ]
             );
     }
+
+
+
+   
+
+
 }

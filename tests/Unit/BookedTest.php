@@ -6,6 +6,7 @@ use Tests\TestCase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use App\Booked;
+use App\User;
 
 class BookedTest extends TestCase
 {
@@ -22,9 +23,10 @@ class BookedTest extends TestCase
                             'id',
                             'user_id',
                             'car_id',
+                            'total_price',
                             'book_date',
-                            'duration',
                             'returned',
+                            'paid',
                             'created_at',
                             'updated_at'
                     ]               
@@ -35,7 +37,7 @@ class BookedTest extends TestCase
     /** @test */
     public function showBooked(){
     	$response = $this->json('GET', '/api/users');
-    	$product = $response->getData()[4];
+    	$product = $response->getData()[16];
 
     	$showCar = $this->json('GET', '/api/books/'.$product->id);
     	$showCar->assertJsonStructure(
@@ -47,9 +49,10 @@ class BookedTest extends TestCase
                             'plate_number',
                             'image',
                             'price',
-                            'duration',
                             'returned',
                             'name',
+                            'total_price',
+                            'paid',
                     ]               
                 ]
             );
@@ -61,9 +64,8 @@ class BookedTest extends TestCase
     	//you can use this to create data manually
         $data = [
         	'user_id' => 18,
-        	'car_id' => 37,
+        	'car_id' => 5,
         	'book_date' => date("Y-m-d"),
-        	'password' => "secret",
         ];
 
         //use this to create new data using faker
@@ -77,10 +79,8 @@ class BookedTest extends TestCase
     public function failBooked(){
     	$data = [
         	'user_id' => 18,
-        	'car_id' => 37,
+        	'car_id' => 13,
         	'book_date' => date("Y-m-d"),
-        	'duration' => $this->faker->numberBetween(1,6),
-        	'password' => "secret",
         ];
 
         //use this to create new data using faker

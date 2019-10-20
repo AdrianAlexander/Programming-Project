@@ -59,4 +59,5 @@ class User extends Authenticatable implements JWTSubject
         return $this->hasOne('App\ReturnCar', 'user_id');
     }
     
+    
 }
