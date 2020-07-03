@@ -53,4 +53,8 @@ class Staff extends Authenticatable implements JWTSubject
     {
         return [];
     }
+
+    public function cars(){
+        return $this->hasMany('App\Car', 'staff_id');
+    }
 }

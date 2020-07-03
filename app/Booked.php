@@ -8,12 +8,12 @@ class Booked extends Model
 {
     protected $fillable = [
 
-    	'user_id', 'car_id', 'book_date'
+    	'user_id', 'vehicle_id', 'book_date'
 
 	];
 
 	protected $casts = [
-    	'returned' => 'boolean',
+    	//'returned' => 'boolean',
         'paid' => 'boolean'
     ];
 
@@ -22,7 +22,7 @@ class Booked extends Model
     }
 
     public function cars(){
-    	return $this->belongsTo('App\Car', 'car_id');
+    	return $this->belongsTo('App\Car', 'vehicle_id');
     }
 
     public function returnCars(){

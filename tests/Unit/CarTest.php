@@ -21,8 +21,10 @@ class CarTest extends TestCase
 		$faker->addProvider(new \MattWells\Faker\Vehicle\Provider($faker));
     	//you can use this to create data manually
         $data = [
-        	'car_name' => $faker->vehicleMake,
-        	'car_type' => $faker->vehicleModel,
+            'staff_id' => '1',
+        	'vehicle_name' => $faker->vehicleMake,
+            'vehicle_category' => 'car',
+        	'vehicle_type' => $faker->vehicleModel,
         	'plate_number' => $faker->vehicleLicensePlate,
         	'fuel' => $this->faker->numberBetween(30, 50),
         	'description' => 'mobil kentang',
@@ -37,8 +39,17 @@ class CarTest extends TestCase
         $response = $this->json('POST', '/api/cars',$data);
        
         $response->assertJson(["Successful!"]);
+        $response->assertStatus(200);
 
         
+    }
+
+    /** @test */
+    public function createCarEmpty(){
+        $data = [];
+        $response = $this->json('POST', '/api/cars', $data);
+        $response->assertJson(["Failed"]);
+        $response->assertStatus(200);
     }
 
     /** @test */
@@ -51,10 +62,13 @@ class CarTest extends TestCase
                 [
                     [
                             'id',
-                            'car_name',
-                            'car_type',
+                            'staff_id',
+                            'vehicle_name',
+                            'vehicle_category',
+                            'vehicle_type',
                             'plate_number',
                             'fuel',
+                            'description',
                             'price',
                             'longitude',
                             'latitude',
@@ -65,6 +79,7 @@ class CarTest extends TestCase
                     ]               
                 ]
             );
+        $showCar->assertStatus(200);
     }
 
     /** @test */
@@ -74,10 +89,13 @@ class CarTest extends TestCase
                 [
                     [
                             'id',
-                            'car_name',
-                            'car_type',
+                            'staff_id',
+                            'vehicle_name',
+                            'vehicle_category',
+                            'vehicle_type',
                             'plate_number',
                             'fuel',
+                            'description',
                             'price',
                             'longitude',
                             'latitude',
@@ -88,6 +106,7 @@ class CarTest extends TestCase
                     ]               
                 ]
             );
+        $response->assertStatus(200);
     }
 
     /** @test */
@@ -110,9 +129,22 @@ class CarTest extends TestCase
 
     	//$car = factory(\App\Car::class)->create();
 
-    	$update = $this->json('PUT', '/api/cars/'.$product->id,['car_name' => "DaihatsuGo"]);
+    	$update = $this->json('PUT', '/api/cars/'.$product->id,['vehicle_name' => "DaihatsuGo"]);
     	$update->assertJson(["Successful!"]);
+        $update->assertStatus(200);
 
 
+    }
+
+    /** @test */
+    public function updateCarEmpty(){
+        $response = $this->json('GET', '/api/cars');
+        $product = $response->getData()[1];
+
+        //$car = factory(\App\Car::class)->create();
+
+        $update = $this->json('PUT', '/api/cars/'.$product->id,[]);
+        $update->assertJson(["Failed"]);
+        $update->assertStatus(200);
     }
 }

@@ -22,10 +22,8 @@ class BookedTest extends TestCase
                     [
                             'id',
                             'user_id',
-                            'car_id',
-                            'total_price',
+                            'vehicle_id',
                             'book_date',
-                            'returned',
                             'paid',
                             'created_at',
                             'updated_at'
@@ -37,25 +35,23 @@ class BookedTest extends TestCase
     /** @test */
     public function showBooked(){
     	$response = $this->json('GET', '/api/users');
-    	$product = $response->getData()[16];
+    	$product = $response->getData()[0];
 
     	$showCar = $this->json('GET', '/api/books/'.$product->id);
     	$showCar->assertJsonStructure(
                 [
                     [
-                            'id',
-                            'car_id',
-                            'car_name',
+                            'vehicle_name',
+                            'vehicle_category',
+                            'description',
                             'plate_number',
-                            'image',
-                            'price',
-                            'returned',
                             'name',
-                            'total_price',
                             'paid',
+                            'book_date',
                     ]               
                 ]
             );
+        $showCar->assertStatus(200);
     }
 
 	/** @test */
@@ -63,9 +59,9 @@ class BookedTest extends TestCase
     {
     	//you can use this to create data manually
         $data = [
-        	'user_id' => 18,
-        	'car_id' => 5,
-        	'book_date' => date("Y-m-d"),
+        	'user_id' => 1,
+        	'vehicle_id' => 2,
+        	//'book_date' => date("Y-m-d"),
         ];
 
         //use this to create new data using faker
@@ -73,14 +69,15 @@ class BookedTest extends TestCase
         $response = $this->json('POST', '/api/books',$data);
        
         $response->assertJson(["Successful!"]);
+        $response->assertStatus(200);
     }
 
     /** @test */
     public function failBooked(){
     	$data = [
-        	'user_id' => 18,
-        	'car_id' => 13,
-        	'book_date' => date("Y-m-d"),
+        	'user_id' => 3,
+        	'vehicle_id' => 4,
+        	//'book_date' => date("Y-m-d"),
         ];
 
         //use this to create new data using faker
@@ -88,6 +85,7 @@ class BookedTest extends TestCase
         $response = $this->json('POST', '/api/books',$data);
        
         $response->assertJson(["Car has been booked, please choose another car"]);
+        $response->assertStatus(200);
     }
 
 }

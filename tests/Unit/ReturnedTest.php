@@ -6,6 +6,7 @@ use Tests\TestCase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use App\ReturnCar;
+use App\Booked;
 
 class ReturnedTest extends TestCase
 {
@@ -17,8 +18,6 @@ class ReturnedTest extends TestCase
                 [
                     [
                             'id',
-                            'user_id',
-                            'car_id',
                             'book_id',
                             'duration',
                             'price',
@@ -33,10 +32,9 @@ class ReturnedTest extends TestCase
     /** @test */
     public function returnCar(){
         //you can use this to create data manually
+        $bookCount = Booked::count();
         $data = [
-            'user_id' => 18,
-            'car_id' => 5,
-            'book_id' => 11,
+            'book_id' => $bookCount,
         ];
 
         //use this to create new data using faker
@@ -44,26 +42,29 @@ class ReturnedTest extends TestCase
         $response = $this->json('POST', '/api/returncars',$data);
        
         $response->assertJson(["Successful!"]);
+        $response->assertStatus(200);
     }
 
 
     /** @test */
     public function showReturn(){
         $response = $this->json('GET', '/api/users');
-        $product = $response->getData()[16];
+        $product = $response->getData()[0];
 
         $showCar = $this->json('GET', '/api/returncars/'.$product->id);
         $showCar->assertJsonStructure(
                 [
                     [
                             'name',
-                            'car_name',
+                            'vehicle_name',
                             'price',
                             'duration',
+                            'date_return',
                             
                     ]               
                 ]
             );
+        $showCar->assertStatus(200);
     }
 
 

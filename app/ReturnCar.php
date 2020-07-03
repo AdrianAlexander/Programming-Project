@@ -13,13 +13,13 @@ class ReturnCar extends Model
 	];
 
 
-    public function users(){
+    /*public function users(){
     	return $this->belongsTo('App\User', 'user_id');
-    }
+    }*/
 
-    public function cars(){
+    /*public function cars(){
     	return $this->belongsTo('App\Car', 'car_id');
-    }
+    }*/
 
     public function bookeds(){
     	return $this->belongsTo('App\Booked', 'book_id');

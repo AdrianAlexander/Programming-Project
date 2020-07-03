@@ -19,13 +19,13 @@ class CreateBookedsTable extends Migration
             $table->foreign('user_id')
             ->references('id')->on('users')
             ->onDelete('cascade');
-            $table->unsignedInteger('car_id');
-            $table->foreign('car_id')
+            $table->unsignedInteger('vehicle_id');
+            $table->foreign('vehicle_id')
             ->references('id')->on('cars')
             ->onDelete('cascade');
-            $table->unsignedInteger('total_price')->nullable();
+            //$table->unsignedInteger('total_price')->nullable();
             $table->dateTime('book_date');
-            $table->boolean('returned')->default(false);
+            //$table->boolean('returned')->default(false);
             $table->boolean('paid')->default(false);
             $table->timestamps();
         });

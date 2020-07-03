@@ -19,6 +19,12 @@ Route::get('testopen', 'TestController@open');
 Route::post('staffregister', 'StaffAuthController@register');
 Route::post('stafflogin', 'StaffAuthController@login');
 Route::get('paypal', 'BookedController@paypal');
+Route::get('showcar', 'CarController@showCar');
+Route::get('showmotorcycle', 'CarController@showMotorcycle');
+Route::get('carbookhistory/{id}', 'BookedController@showCarBookHistory');
+Route::get('motorcyclebookhistory/{id}', 'BookedController@showMotorcycleBookHistory');
+Route::get('carreturnhistory/{id}', 'ReturnCarController@showCarReturnHistory');
+Route::get('motorcyclereturnhistory/{id}', 'ReturnCarController@showMotorcycleReturnHistory');
 
 
 Route::apiResources([
@@ -29,12 +35,12 @@ Route::apiResources([
 ]);
 
 Route::group(['middleware' => ['jwt.auth']], function() {
-    Route::get('logout', 'AuthController@logout');
+    Route::post('logout', 'AuthController@logout');
     Route::get('testclosed', 'TestController@closed');
 	Route::get('refreshtoken', 'AuthController@refreshtoken');	
 });
 
 Route::group([ 'prefix' => 'staff', 'middleware' =>['jwt.auth']], function(){
 	Route::get('teststaff', 'TestController@staff');
-	Route::get('stafflogout', 'StaffAuthController@logout');
+	Route::post('stafflogout', 'StaffAuthController@logout');
 });

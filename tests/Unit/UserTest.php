@@ -8,7 +8,7 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use App\User;
 use Illuminate\Support\Str;
 use Hash;
-
+use JWTAuth;
 
 class UserTest extends TestCase
 {
@@ -29,6 +29,96 @@ class UserTest extends TestCase
         $response = $this->json('POST', '/api/register',$data);
        
         $response->assertJson(['success'=> true, 'message'=> 'Thanks for signing up!']);
+        $response->assertStatus(200);
+        $response->assertJsonStructure(
+                [
+                    
+                        'success',
+                        'message'
+                         
+                ]
+            );
+                                    
+    }
+
+    /** @test */
+    public function login(){
+        $data = [
+            'email' => "kentang@gmail.com",
+            'password' => "kentang",
+        ];
+
+        $response = $this->json('POST', '/api/login', $data);
+        $response->assertStatus(200);
+        $response->assertJsonStructure(
+                [
+                    'status',
+                    'data' =>
+                    [
+                        'token',
+                        'user' =>
+                        [
+                            'id',
+                            'name'
+                        ]
+
+                    ]
+                ]
+        );
+    }
+
+    /** @test */
+    public function logout(){
+        $user = User::findorFail(7);
+        $token = JWTAuth::fromUser($user);
+        $data = [
+            'token' => $token,
+        ];
+
+        $response = $this->json('POST', '/api/logout', $data);
+
+        $response->assertStatus(200);
+        $response->assertJsonStructure(
+                [
+                    'success',
+                    'message'
+                ]
+        );
+
+        $response->assertJson(['success'=> true, 'message'=> 'You have successfully logged out.']);
+    }
+
+    /** @test */
+    public function loginFail(){
+        $data = [
+            'email' => "kentang@gmail.com",
+            'password' => "kentangg",
+        ];
+
+        $response = $this->json('POST', '/api/login', $data);
+        $response->assertStatus(401);
+        $response->assertJsonStructure(
+                [
+                    'status',
+                    'message'  
+                ]
+        );
+        $response->assertJson(['status'=> 'error', 'message' => 'We can`t find an account with this credentials.']);
+    }
+
+    /** @test */
+    public function createUserExisting(){
+
+        $data = [
+            'name' => "kentang",
+            'email' => "kentang@gmail.com",
+            'password' => "kentang",
+        ];
+
+        $response = $this->json('POST', '/api/register', $data);
+
+        $response->assertStatus(200);
+        $response->assertJson(['success' => false]);
     }
 
     /** @test */
@@ -65,6 +155,7 @@ class UserTest extends TestCase
                     ]               
                 ]
             );
+        $showCar->assertStatus(200);
     }
 
     
@@ -91,7 +182,20 @@ class UserTest extends TestCase
 
     	$update = $this->json('PUT', '/api/users/'.$product->id,['name' => $this->faker->name, 'password' => Hash::make("secret")]);
     	$update->assertJson(["Successful"]);
+        $update->assertStatus(200);
 
+    }
+
+    /** @test */
+    public function updateUserFail(){
+        $response = $this->json('GET', '/api/users');
+        $product = $response->getData()[0];
+
+        //$car = factory(\App\Car::class)->create();
+
+        $update = $this->json('PUT', '/api/users/'.$product->id,[]);
+        $update->assertJson(["No Changes Were Made"]);
+        $update->assertStatus(200);
     }
 
 
