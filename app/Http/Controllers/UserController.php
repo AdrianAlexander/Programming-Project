@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\User;
+use Hash;
 
 class UserController extends Controller
 {
@@ -30,6 +31,7 @@ class UserController extends Controller
     {
         try{
             $var = User::findOrFail($id);
+            //$var = User::select('id', 'password')->where('id', $id)->first();
 
             return response([$var]);
 
@@ -51,7 +53,7 @@ class UserController extends Controller
     public function update(Request $request, $id)
     {
         try{
-            if($request->name != NULL || $request->email !=NULL || $request->password !=NULL){
+            if($request->name != NULL || $request->password !=NULL){
 
                 $var = User::findOrFail($id);
 
@@ -59,18 +61,14 @@ class UserController extends Controller
                     $request->name = $var->name;
                 }
 
-                if($request->email == NULL){
-                    $request->email = $var->email;
-                }
-
                 if($request->password == NULL){
                     $request->password == $var->password;
                 }
 
+
                 $var->update([
                         'name' => $request->name,
-                        'password' => $request->password,
-                        'email' => $request->email,
+                        'password' => Hash::make($request->password),
                      ]);
 
                 return response([

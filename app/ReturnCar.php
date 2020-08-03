@@ -8,16 +8,20 @@ class ReturnCar extends Model
 {
    protected $fillable = [
 
-    	'user_id', 'car_id', 'date_return'
+    	'user_id', 'car_id', 'book_id', 'date_return', 'duration', 'price'
 
 	];
 
 
-    public function users(){
+    /*public function users(){
     	return $this->belongsTo('App\User', 'user_id');
-    }
+    }*/
 
-    public function cars(){
+    /*public function cars(){
     	return $this->belongsTo('App\Car', 'car_id');
+    }*/
+
+    public function bookeds(){
+    	return $this->belongsTo('App\Booked', 'book_id');
     }
 }

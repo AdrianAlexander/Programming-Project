@@ -2,12 +2,13 @@
 
 namespace App;
 
+use App\Notifications\StaffResetPassword;
 use Illuminate\Notifications\Notifiable;
-use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 
-class User extends Authenticatable implements JWTSubject
+
+class Staff extends Authenticatable implements JWTSubject
 {
     use Notifiable;
 
@@ -17,7 +18,7 @@ class User extends Authenticatable implements JWTSubject
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password', 'image'
+        'name', 'email', 'password',
     ];
 
     /**
@@ -26,17 +27,19 @@ class User extends Authenticatable implements JWTSubject
      * @var array
      */
     protected $hidden = [
-        /*'password',*/ 'remember_token',
+        'password', 'remember_token',
     ];
 
     /**
-     * The attributes that should be cast to native types.
+     * Send the password reset notification.
      *
-     * @var array
+     * @param  string  $token
+     * @return void
      */
-    /*protected $casts = [
-        'email_verified_at' => 'datetime',
-    ];*/
+    public function sendPasswordResetNotification($token)
+    {
+        $this->notify(new StaffResetPassword($token));
+    }
 
     public function getJWTIdentifier()
     {
@@ -51,13 +54,7 @@ class User extends Authenticatable implements JWTSubject
         return [];
     }
 
-    public function bookeds(){
-        return $this->hasOne('App\Booked', 'user_id');
+    public function cars(){
+        return $this->hasMany('App\Car', 'staff_id');
     }
-
-    /*public function returnCars(){
-        return $this->hasOne('App\ReturnCar', 'user_id');
-    }*/
-    
-    
 }

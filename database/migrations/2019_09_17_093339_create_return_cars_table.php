@@ -15,15 +15,21 @@ class CreateReturnCarsTable extends Migration
     {
         Schema::create('return_cars', function (Blueprint $table) {
             $table->increments('id');
-            $table->unsignedInteger('user_id');
+            /*$table->unsignedInteger('user_id');
             $table->foreign('user_id')
             ->references('id')->on('users')
-            ->onDelete('cascade');
-            $table->unsignedInteger('car_id');
+            ->onDelete('cascade');*/
+            /*$table->unsignedInteger('car_id');
             $table->foreign('car_id')
             ->references('id')->on('cars')
+            ->onDelete('cascade');*/
+            $table->unsignedInteger('book_id');
+            $table->foreign('book_id')
+            ->references('id')->on('bookeds')
             ->onDelete('cascade');
-            $table->date('date_return')->format('d-m-Y');
+            $table->unsignedInteger('duration')->nullable();
+            $table->unsignedInteger('price');
+            $table->dateTime('date_return')->format('d-m-Y');
             $table->timestamps();
         });
     }

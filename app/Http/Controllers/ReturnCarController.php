@@ -5,9 +5,12 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\ReturnCar;
 use App\Car;
+use App\Booked;
+use App\User;
 
 class ReturnCarController extends Controller
 {
+    
     /**
      * Display a listing of the resource.
      *
@@ -26,31 +29,64 @@ class ReturnCarController extends Controller
      */
     public function store(Request $request)
     {
+
+        //$var = Car::findOrFail($request->car_id);
+        //$varBook = Booked::findOrFail($request->book_id); 
+        $var = Booked::findOrFail($request->book_id);
+        $get = $var->vehicle_id;
+        $carInfo = Car::findorFail($get);
+
+
         try{
+            date_default_timezone_set('Asia/Jakarta');
+            $getDate = date("Y-m-d H:i:s");
 
-            $getDate = date("Y-m-d");
-
-            if($request->date_return < $getDate){
+            /*if($request->date_return < $getDate){
                 return response([
                     "please fill the right date",
                 ]);
-            }
+            }*/
 
-            $var = Car::findOrFail($request->car_id);
+           
 
-            if($var->taken == true && $request->user_id != NULL && $request->car_id != NULL && $request->date_return != NULL){
+            if($carInfo->taken == true && $request->book_id != NULL){
 
+                $endDate = new \DateTime($request->date_return);
+                $startDate = new \DateTime($var->book_date);
+                //$testDate = new \DateTime("2019-10-05 10:15:20");
+                
+                $diff = $endDate->diff($endDate);
+                $hours = $diff->h;
+                $hours = $hours + ($diff->days*24);
+
+                if($hours <1){
+                    $hours = 1;
+                }
+
+                $totalPrice = $carInfo->price * $hours;
                 $newData = [
-                'user_id' => $request->user_id,
-                'car_id' => $request->car_id,
-                'date_return' => $request->date_return,
+                //'user_id' => $request->user_id,
+                //'car_id' => $request->car_id,
+                'book_id' => $request->book_id,
+                'date_return' => $getDate,
+                'duration' => $hours,
+                'price' => $totalPrice,
                 ];
 
                 $fill = ReturnCar::create($newData);
 
-                $var->taken = false;
-                $var->save();
+                $carInfo->taken = false;
+               
+                //$varBook->duration = date_diff($endDate, $startDate)->format("%a");
+                //$varBook->duration = date_diff($endDate, $startDate);
 
+                //$varBook->returned = true;
+
+                //$varBook->paid = true;
+                //$varBook->total_price = $totalPrice;
+               
+                $carInfo->save();
+                //$varBook->save();
 
 
                 return response([
@@ -79,18 +115,64 @@ class ReturnCarController extends Controller
      */
     public function show($id)
     {
-        
-        try{
+
+        //$testvar = ReturnCar::findOrFail($id);
+        //$bookinfo = $testvar->book_id;
+        //$carinfo = Booked::findorFail($bookinfo);
+        //$carid = $carinfo->car_id;
+        //$findcar = 
+        /*try{
             
-            $var = ReturnCar::where('user_id',$id)->first();
+            $var = ReturnCar::where('user_id',$id)
+            ->leftjoin('users','return_cars.user_id', '=', 'users.id')
+            ->leftjoin('cars', 'return_cars.car_id', '=', 'cars.id')
+            ->select('users.name', 'cars.car_name', 'return_cars.price', 'return_cars.duration')->get();
+           // $var = ReturnCar::where('')
+            return $var;
+            
+        }catch(\Exception $e){
             return response([
-                'return' => $var
+                $e->getMessage()
             ]);
+        }*/
+
+        /*try{
+            $varc = Car::findOrFail($carid);
+            return response([$varc]);
+
+        }catch(\Exception $e){
+            return response([
+                    $e->getMessage()
+            ]);
+        }*/
+
+       try{
+            
+            /*$userId = User::findOrFail($id);
+            $user = $userId->id;
+            $bookId = Booked::leftjoin('bookeds', 'bookeds.user_id', '=', '$user' )
+            ->select('bookeds.id');
+
+            $returnId = ReturnCar::leftjoin('return_cars', 'book_id', '=', 'bookeds.id')
+            ->select($)*/
+
+            $var = ReturnCar::leftjoin('bookeds','bookeds.id', '=', 'return_cars.book_id')
+            ->leftjoin('cars', 'cars.id', '=', 'bookeds.vehicle_id')
+            ->leftjoin('users', 'users.id', '=', 'bookeds.user_id')
+            ->select('users.name', 'cars.vehicle_name', 'return_cars.price', 'return_cars.duration', 'return_cars.date_return', 'return_cars.book_id','bookeds.vehicle_id')
+            ->where('users.id', $id)->get();
+            //->where('bookeds.vehicle_id', '=', 'cars.id')->get();
+
+            return $var;
+
+            
         }catch(\Exception $e){
             return response([
                 $e->getMessage()
             ]);
         }
+
+        
     }
 
 
@@ -124,6 +206,46 @@ class ReturnCarController extends Controller
             }    
         }catch(Exception $e){
             return $e->getMessage();
+        }
+    }
+
+    public function showCarReturnHistory($id){
+         try{
+            
+
+            $var = ReturnCar::leftjoin('bookeds','bookeds.id', '=', 'return_cars.book_id')
+            ->leftjoin('cars', 'cars.id', '=', 'bookeds.vehicle_id')
+            ->leftjoin('users', 'users.id', '=', 'bookeds.user_id')
+            ->select('users.name', 'cars.vehicle_name', 'return_cars.price', 'return_cars.duration', 'return_cars.date_return')
+            ->where('users.id', $id)
+            ->where('cars.vehicle_category', '=', 'car')->get();
+
+            return $var;
+            
+        }catch(\Exception $e){
+            return response([
+                $e->getMessage()
+            ]);
+        }
+    }
+
+    public function showMotorcycleReturnHistory($id){
+         try{
+            
+
+            $var = ReturnCar::leftjoin('bookeds','bookeds.id', '=', 'return_cars.book_id')
+            ->leftjoin('cars', 'cars.id', '=', 'bookeds.vehicle_id')
+            ->leftjoin('users', 'users.id', '=', 'bookeds.user_id')
+            ->select('users.name', 'cars.vehicle_name', 'return_cars.price', 'return_cars.duration', 'return_cars.date_return')
+            ->where('users.id', $id)
+            ->where('cars.vehicle_category', '=', 'motorcycle')->get();
+
+            return $var;
+            
+        }catch(\Exception $e){
+            return response([
+                $e->getMessage()
+            ]);
         }
     }
 }

@@ -39,7 +39,28 @@ class RouteServiceProvider extends ServiceProvider
 
         $this->mapWebRoutes();
 
+        $this->mapStaffRoutes();
+
         //
+    }
+
+    /**
+     * Define the "staff" routes for the application.
+     *
+     * These routes all receive session state, CSRF protection, etc.
+     *
+     * @return void
+     */
+    protected function mapStaffRoutes()
+    {
+        Route::group([
+            'middleware' => ['web', 'staff', 'auth:staff'],
+            'prefix' => 'staff',
+            'as' => 'staff.',
+            'namespace' => $this->namespace,
+        ], function ($router) {
+            require base_path('routes/staff.php');
+        });
     }
 
     /**

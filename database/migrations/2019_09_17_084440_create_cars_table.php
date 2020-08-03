@@ -1,4 +1,4 @@
-<?php
+    <?php
 
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
@@ -15,13 +15,20 @@ class CreateCarsTable extends Migration
     {
         Schema::create('cars', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('car_name');
-            $table->string('car_type');
+            $table->unsignedInteger('staff_id');
+            $table->foreign('staff_id')
+            ->references('id')->on('staff')
+            ->onDelete('cascade');
+            $table->string('vehicle_name');
+            $table->string('vehicle_category');
+            $table->string('vehicle_type');
             $table->string('plate_number');
             $table->unsignedInteger('fuel');
             $table->string('description');
             $table->unsignedInteger('price');
-            $table->string('image');
+            $table->double('longitude');
+            $table->double('latitude');
+            $table->string('image')->nullable();
             $table->boolean('taken')->default(false);
             $table->timestamps();
         });

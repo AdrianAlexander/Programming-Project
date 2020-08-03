@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Car extends Model
 {
     protected $fillable = [
-    	'car_name', 'car_type', 'plate_number', 'fuel', 'description', 'price', 'image', 'taken'
+    	'staff_id', 'vehicle_name', 'vehicle_category', 'vehicle_type', 'plate_number', 'fuel', 'description', 'price', 'longitude', 'latitude', 'image', 'taken'
     ];
 
     protected $casts = [
@@ -15,11 +15,14 @@ class Car extends Model
     ];
 
     public function bookeds(){
-    	return $this->hasOne('App\Booked', 'car_id');
+    	return $this->hasOne('App\Booked', 'vehicle_id');
     }
 
-    public function returnCars(){
+    /*public function returnCars(){
     	return $this->hasOne('App\ReturnCar', 'car_id');
+    }*/
+    public function staff(){
+        return $this->belongsTo('App\Staff', 'staff_id');
     }
 
 }

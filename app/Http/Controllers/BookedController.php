@@ -30,16 +30,16 @@ class BookedController extends Controller
     {
         
        try{
+            date_default_timezone_set('Asia/Jakarta');
+            $getDate = date("Y-m-d H:i:s");
 
-            $getDate = date("Y-m-d");
-
-            if($request->book_date < $getDate){
+            /*if($request->book_date < $getDate){
                 return response([
                     "please fill the right date",
                 ]);
-            }
+            }*/
 
-            $var = Car::findOrFail($request->car_id);
+            $var = Car::findOrFail($request->vehicle_id);
 
             if($var->taken == true){
                 return response([
@@ -47,13 +47,12 @@ class BookedController extends Controller
                 ]);
             }
 
-            if($var->taken == false && $request->user_id != NULL && $request->car_id != NULL && $request->book_date != NULL && $request->duration != NULL){
+            if($var->taken == false && $request->user_id != NULL && $request->vehicle_id != NULL){
 
                 $newData = [
                 'user_id' => $request->user_id,
-                'car_id' => $request->car_id,
-                'book_date' => $request->book_date,
-                'duration' => $request->duration,
+                'vehicle_id' => $request->vehicle_id,
+                'book_date' => $getDate,
                 ];
 
                 $fill = Booked::create($newData);
@@ -92,14 +91,22 @@ class BookedController extends Controller
         try{
             
             //$var = Booked::select('cars.car_name', 'cars.id')->leftjoin('cars','cars.id','=','books.car_id')->where('id', $id);
-            $var = Booked::where('bookeds.id', $id)
+            /*$var = Booked::where('bookeds.id', $id)
             ->leftjoin('cars', 'bookeds.car_id', '=', 'cars.id')
             ->leftjoin('users', 'bookeds.user_id', '=', 'users.id')
-            ->select('bookeds.id', 'users.name', 'cars.car_name', 'cars.car_type', 'bookeds.book_date')->first();
+            ->select('bookeds.id', 'users.name', 'cars.car_name', 'cars.car_type', 'bookeds.book_date')->first();*/
             //$var = Booked::leftjoin('cars','cars.id','=', 'books.car_id')->select('cars.*')->where('books.id', $id)->first();
-            return response([
-                'booked' => $var
-            ]);
+
+            $var = Booked::leftjoin('cars','cars.id','=', 'bookeds.vehicle_id')
+            ->leftjoin('users', 'bookeds.user_id', '=', 'users.id')
+            ->select('bookeds.id', 'bookeds.vehicle_id', 'cars.vehicle_name', 'cars.vehicle_category', 'cars.description', 'cars.plate_number', 'cars.taken', /*'cars.image','cars.price', 'bookeds.returned',*/ 'users.name'/*, 'bookeds.total_price'*/,  'bookeds.paid', 'bookeds.book_date')
+            ->where('users.id', $id)->get();
+
+
+            
+
+            return $var;
+           
         }catch(\Exception $e){
             return response([
                 $e->getMessage()
@@ -139,6 +146,48 @@ class BookedController extends Controller
             }    
         }catch(Exception $e){
             return $e->getMessage();
+        }
+    }
+
+    public function paypal($id){
+        $var = Booked::findOrFail($id);
+        $var->paid = true;
+        $var->save();
+    }
+
+    public function showCarBookHistory($id){
+        try{
+            $var = Booked::leftjoin('cars','cars.id','=', 'bookeds.vehicle_id')
+            ->leftjoin('users', 'bookeds.user_id', '=', 'users.id')
+            ->select(/*'bookeds.id', 'bookeds.vehicle_id',*/ 'cars.vehicle_name', 'cars.vehicle_category', 'cars.description', 'cars.plate_number', /*'cars.image','cars.price', 'bookeds.returned',*/ 'users.name'/*, 'bookeds.total_price'*/,  'bookeds.paid', 'bookeds.book_date')
+            ->where('users.id', $id)
+            ->where('cars.vehicle_category', '=', 'car')->get();
+            
+            return $var;      
+
+        }catch(\Exception $e){
+            return response([
+                $e->getMessage()
+            ]);
+        }
+        
+
+    }
+
+    public function showMotorcycleBookHistory($id){
+        try{
+            $var = Booked::leftjoin('cars','cars.id','=', 'bookeds.vehicle_id')
+            ->leftjoin('users', 'bookeds.user_id', '=', 'users.id')
+            ->select(/*'bookeds.id', 'bookeds.vehicle_id',*/ 'cars.vehicle_name', 'cars.vehicle_category', 'cars.description', 'cars.plate_number', /*'cars.image','cars.price', 'bookeds.returned',*/ 'users.name'/*, 'bookeds.total_price'*/,  'bookeds.paid', 'bookeds.book_date')
+            ->where('users.id', $id)
+            ->where('cars.vehicle_category', '=', 'motorcycle')->get();
+            
+            return $var;      
+
+        }catch(\Exception $e){
+            return response([
+                $e->getMessage()
+            ]);
         }
     }
 }

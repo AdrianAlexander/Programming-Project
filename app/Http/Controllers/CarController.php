@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Car;
+use App\Staff;
 
 class CarController extends Controller
 {
@@ -31,15 +32,19 @@ class CarController extends Controller
        
        try{
             //prevents creating a record with nothing in it
-            if($request->car_name != NULL && $request->car_type != NULL && $request->plate_number != NULL && $request->fuel != NULL && $request->description != NULL && $request->price != NULL && $request->image != NULL){
+            if($request->staff_id != NULL && $request->vehicle_name != NULL && $request->vehicle_category != NULL && $request->vehicle_type != NULL && $request->plate_number != NULL && $request->fuel != NULL && $request->description != NULL && $request->price != NULL && $request->longitude !=NULL && $request->latitude !=NULL && $request->image != NULL){
 
                 $newData = [
-                'car_name' => $request->car_name,
-                'car_type' => $request->car_type,
+                'staff_id' => $request->staff_id,
+                'vehicle_name' => $request->vehicle_name,
+                'vehicle_category' => $request->vehicle_category,
+                'vehicle_type' => $request->vehicle_type,
                 'plate_number' => $request->plate_number,
                 'fuel' => $request->fuel,
                 'description' => $request->description,
                 'price' => $request->price,
+                'longitude' => $request->longitude,
+                'latitude' => $request->latitude,
                 'image' => $request->image,
                 ];
 
@@ -94,16 +99,20 @@ class CarController extends Controller
     {
 
         try{
-            if($request->car_name != NULL || $request->car_type != NULL || $request->plate_number != NULL || $request->fuel != NULL || $request->description != NULL || $request->price != NULL || $request->image != NULL){
+            if($request->staff_id != NULL || $request->vehicle_name != NULL || $request->vehicle_category != NULL || $request->vehicle_type != NULL || $request->plate_number != NULL || $request->fuel != NULL || $request->description != NULL || $request->price != NULL || $request->longitude != NULL || $request->latitude !=NULL || $request->image != NULL){
 
                $var = Car::findOrFail($id);
 
-               if($request->car_name == NULL){
-                    $request->car_name = $var->car_name;
+               if($request->vehicle_name == NULL){
+                    $request->vehicle_name = $var->vehicle_name;
                }
 
-               if($request->car_type == NULL){
-                    $request->car_type = $var->car_type;
+               if($request->vehicle_category == NULL){
+                    $request->vehicle_category = $var->vehicle_category;
+               }
+
+               if($request->vehicle_type == NULL){
+                    $request->vehicle_type = $var->vehicle_type;
                }
 
                if($request->plate_number == NULL){
@@ -122,17 +131,29 @@ class CarController extends Controller
                     $request->price = $var->price;
                }
 
+               if($request->longitude == NULL){
+                    $request->longitude = $var->longitude;
+               }
+
+               if($request->latitude == NULL){
+                    $request->latitude = $var->latitude;
+               }
+
                if($request->image == NULL){
                     $request->image = $var->image;
                }
 
                $var->update([
-                    'car_name' => $request->car_name,
-                    'car_type' => $request->car_type,
+                    'staff_id' => $request->staff_id,
+                    'vehicle_name' => $request->vehicle_name,
+                    'vehicle_category' => $request->vehicle_category,
+                    'vehicle_type' => $request->vehicle_type,
                     'plate_number' => $request->plate_number,
                     'fuel' => $request->fuel,
                     'description' =>$request->description,
                     'price' => $request->price,
+                    'longitude' => $request->longitude,
+                    'latitude' => $request->latitude,
                     'image' => $request->image
                ]);
 
@@ -176,5 +197,15 @@ class CarController extends Controller
                 $e->getMessage()
             ]);
         }
+    }
+
+    public function showCar(){
+        $var = Car::where('vehicle_category', '=', 'car')->get();
+        return $var;
+    }
+
+    public function showMotorcycle(){
+        $var = Car::where('vehicle_category', '=', 'motorcycle')->get();
+        return $var;
     }
 }
