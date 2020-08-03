@@ -99,7 +99,7 @@ class BookedController extends Controller
 
             $var = Booked::leftjoin('cars','cars.id','=', 'bookeds.vehicle_id')
             ->leftjoin('users', 'bookeds.user_id', '=', 'users.id')
-            ->select(/*'bookeds.id', 'bookeds.vehicle_id',*/ 'cars.vehicle_name', 'cars.vehicle_category', 'cars.description', 'cars.plate_number', /*'cars.image','cars.price', 'bookeds.returned',*/ 'users.name'/*, 'bookeds.total_price'*/,  'bookeds.paid', 'bookeds.book_date')
+            ->select('bookeds.id', 'bookeds.vehicle_id', 'cars.vehicle_name', 'cars.vehicle_category', 'cars.description', 'cars.plate_number', 'cars.taken', /*'cars.image','cars.price', 'bookeds.returned',*/ 'users.name'/*, 'bookeds.total_price'*/,  'bookeds.paid', 'bookeds.book_date')
             ->where('users.id', $id)->get();
 
 
@@ -155,7 +155,7 @@ class BookedController extends Controller
         $var->save();
     }
 
-    public function showCarHistory($id){
+    public function showCarBookHistory($id){
         try{
             $var = Booked::leftjoin('cars','cars.id','=', 'bookeds.vehicle_id')
             ->leftjoin('users', 'bookeds.user_id', '=', 'users.id')
@@ -174,7 +174,7 @@ class BookedController extends Controller
 
     }
 
-    public function showMotorcycleHistory($id){
+    public function showMotorcycleBookHistory($id){
         try{
             $var = Booked::leftjoin('cars','cars.id','=', 'bookeds.vehicle_id')
             ->leftjoin('users', 'bookeds.user_id', '=', 'users.id')

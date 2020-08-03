@@ -99,7 +99,7 @@ class CarController extends Controller
     {
 
         try{
-            if($request->vehicle_name != NULL || $request->vehicle_category != NULL || $request->vehicle_type != NULL || $request->plate_number != NULL || $request->fuel != NULL || $request->description != NULL || $request->price != NULL || $request->longitude != NULL || $request->latitude !=NULL || $request->image != NULL){
+            if($request->staff_id != NULL || $request->vehicle_name != NULL || $request->vehicle_category != NULL || $request->vehicle_type != NULL || $request->plate_number != NULL || $request->fuel != NULL || $request->description != NULL || $request->price != NULL || $request->longitude != NULL || $request->latitude !=NULL || $request->image != NULL){
 
                $var = Car::findOrFail($id);
 
@@ -144,6 +144,7 @@ class CarController extends Controller
                }
 
                $var->update([
+                    'staff_id' => $request->staff_id,
                     'vehicle_name' => $request->vehicle_name,
                     'vehicle_category' => $request->vehicle_category,
                     'vehicle_type' => $request->vehicle_type,

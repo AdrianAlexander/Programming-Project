@@ -148,14 +148,23 @@ class ReturnCarController extends Controller
 
        try{
             
+            /*$userId = User::findOrFail($id);
+            $user = $userId->id;
+            $bookId = Booked::leftjoin('bookeds', 'bookeds.user_id', '=', '$user' )
+            ->select('bookeds.id');
+
+            $returnId = ReturnCar::leftjoin('return_cars', 'book_id', '=', 'bookeds.id')
+            ->select($)*/
 
             $var = ReturnCar::leftjoin('bookeds','bookeds.id', '=', 'return_cars.book_id')
             ->leftjoin('cars', 'cars.id', '=', 'bookeds.vehicle_id')
             ->leftjoin('users', 'users.id', '=', 'bookeds.user_id')
-            ->select('users.name', 'cars.vehicle_name', 'return_cars.price', 'return_cars.duration', 'return_cars.date_return')
+            ->select('users.name', 'cars.vehicle_name', 'return_cars.price', 'return_cars.duration', 'return_cars.date_return', 'return_cars.book_id','bookeds.vehicle_id')
             ->where('users.id', $id)->get();
+            //->where('bookeds.vehicle_id', '=', 'cars.id')->get();
 
             return $var;
+
             
         }catch(\Exception $e){
             return response([

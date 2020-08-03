@@ -53,7 +53,7 @@ class UserController extends Controller
     public function update(Request $request, $id)
     {
         try{
-            if($request->name != NULL || $request->email !=NULL || $request->password !=NULL || $request->image !=NULL){
+            if($request->name != NULL || $request->password !=NULL){
 
                 $var = User::findOrFail($id);
 
@@ -61,23 +61,14 @@ class UserController extends Controller
                     $request->name = $var->name;
                 }
 
-                if($request->email == NULL){
-                    $request->email = $var->email;
-                }
-
                 if($request->password == NULL){
                     $request->password == $var->password;
                 }
 
-                if($request->image == NULL){
-                    $request->image = $var->image;
-                }
 
                 $var->update([
                         'name' => $request->name,
                         'password' => Hash::make($request->password),
-                        'email' => $request->email,
-                        'image' => $request->image,
                      ]);
 
                 return response([

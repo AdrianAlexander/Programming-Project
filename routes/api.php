@@ -18,7 +18,7 @@ Route::post('register', 'AuthController@register');
 Route::get('testopen', 'TestController@open');
 Route::post('staffregister', 'StaffAuthController@register');
 Route::post('stafflogin', 'StaffAuthController@login');
-Route::get('paypal', 'BookedController@paypal');
+Route::get('paypal/{id}', 'BookedController@paypal');
 Route::get('showcar', 'CarController@showCar');
 Route::get('showmotorcycle', 'CarController@showMotorcycle');
 Route::get('carbookhistory/{id}', 'BookedController@showCarBookHistory');
